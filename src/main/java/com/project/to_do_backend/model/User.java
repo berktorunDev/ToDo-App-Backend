@@ -7,6 +7,7 @@ import java.util.UUID;
 import javax.validation.constraints.Email;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -32,11 +33,26 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<MainTask> tasks;
 
-    public User(UUID id, String username, String email, String password) {
+    // Create a private and static field for password encoding using
+    // BCryptPasswordEncoder.
+    private static final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+    /**
+     * Method to encrypt (hash) the user's password.
+     * This method replaces the plain text password with its hashed version.
+     */
+    public void encryptPassword() {
+        this.password = passwordEncoder.encode(this.password);
+    }
+
+    public User() {
+        this.creationDate = LocalDateTime.now();
+    }
+
+    public User(UUID id, String username, String email) {
         this.id = id;
         this.username = username;
         this.email = email;
-        this.password = password;
         this.creationDate = LocalDateTime.now();
     }
 

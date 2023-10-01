@@ -10,7 +10,7 @@ public class ResponseHandler {
 
     public static ResponseEntity<Object> successResponse(HttpStatus status, String infoMessage, Object data) {
         Map<String, Object> result = new HashMap<>();
-        result.put("success", true);
+        result.put("success", Boolean.TRUE);
         result.put("status", status.value());
         result.put("data", data);
         result.put("infoMessage", infoMessage);
@@ -20,7 +20,7 @@ public class ResponseHandler {
 
     public static ResponseEntity<Object> errorResponse(HttpStatus status, String message) {
         Map<String, Object> result = new HashMap<>();
-        result.put("success", false);
+        result.put("success", Boolean.FALSE);
         result.put("status", status.value());
         result.put("message", message);
 

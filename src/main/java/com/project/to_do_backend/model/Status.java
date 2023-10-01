@@ -20,6 +20,9 @@ public class Status {
     @Enumerated(EnumType.STRING)
     private StatusType statusType;
 
+    public Status() {
+    }
+
     public Status(UUID id, StatusType statusType) {
         this.id = id;
         this.statusType = statusType;

@@ -1,5 +1,8 @@
 package com.project.to_do_backend.script;
 
+//if u wanna insert initial value to db remove comment signs
+
+/*
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
@@ -31,3 +34,4 @@ public class StartupScript implements CommandLineRunner {
         jdbcTemplate.execute(sql);
     }
 }
+*/

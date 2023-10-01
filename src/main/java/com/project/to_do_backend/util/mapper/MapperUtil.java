@@ -4,12 +4,12 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-public class BaseMapper {
+public class MapperUtil {
 
     private final ModelMapper modelMapper;
 
     // Constructor with Dependency Injection
-    public BaseMapper(ModelMapper modelMapper) {
+    public MapperUtil(ModelMapper modelMapper) {
         this.modelMapper = modelMapper;
     }
 

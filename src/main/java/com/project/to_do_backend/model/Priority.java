@@ -20,6 +20,9 @@ public class Priority {
     @Enumerated(EnumType.STRING)
     private PriorityType priorityType;
 
+    public Priority() {
+    }
+
     public Priority(UUID id, PriorityType priorityType) {
         this.id = id;
         this.priorityType = priorityType;

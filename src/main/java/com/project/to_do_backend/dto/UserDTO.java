@@ -8,16 +8,17 @@ public class UserDTO {
     private UUID id;
     private String username;
     private String email;
-    private String password;
     private LocalDateTime creationDate;
     private Set<MainTaskDTO> tasks;
 
-    public UserDTO(UUID id, String username, String email, String password, LocalDateTime creationDate,
+    public UserDTO() {
+    }
+
+    public UserDTO(UUID id, String username, String email, LocalDateTime creationDate,
             Set<MainTaskDTO> tasks) {
         this.id = id;
         this.username = username;
         this.email = email;
-        this.password = password;
         this.creationDate = creationDate;
         this.tasks = tasks;
     }
@@ -44,14 +45,6 @@ public class UserDTO {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public LocalDateTime getCreationDate() {
