@@ -12,6 +12,9 @@ public class SubTask extends BaseTask {
     @JoinColumn(name = "main_task_id")
     private MainTask mainTask;
 
+    public SubTask() {
+    }
+
     public SubTask(UUID id, String description, Priority priority, Status status, User user, MainTask mainTask) {
         super(id, description, priority, status, user);
         this.mainTask = mainTask;

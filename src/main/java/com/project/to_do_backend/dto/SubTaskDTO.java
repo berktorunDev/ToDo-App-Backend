@@ -9,6 +9,9 @@ import com.project.to_do_backend.model.StatusType;
 public class SubTaskDTO extends BaseTaskDTO {
     private UUID mainTaskId;
 
+    public SubTaskDTO() {
+    }
+
     public SubTaskDTO(UUID id, String description, PriorityType priority, StatusType status, LocalDateTime creationDate,
             UUID userId, UUID mainTaskId) {
         super(id, description, priority, status, creationDate, userId);

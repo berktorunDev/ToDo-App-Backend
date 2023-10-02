@@ -11,6 +11,9 @@ public class MainTaskDTO extends BaseTaskDTO {
 
     private Set<SubTaskDTO> subTasks;
 
+    public MainTaskDTO() {
+    }
+
     public MainTaskDTO(UUID id, String description, PriorityType priority, StatusType status,
             LocalDateTime creationDate, UUID userId) {
         super(id, description, priority, status, creationDate, userId);

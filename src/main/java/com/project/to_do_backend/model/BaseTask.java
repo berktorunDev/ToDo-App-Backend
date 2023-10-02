@@ -34,12 +34,15 @@ public abstract class BaseTask {
     @JoinColumn(name = "user_id")
     private User user;
 
+    public BaseTask() {
+        this.creationDate = LocalDateTime.now();
+    }
+
     public BaseTask(UUID id, String description, Priority priority, Status status, User user) {
         this.id = id;
         this.description = description;
         this.priority = priority;
         this.status = status;
-        this.creationDate = LocalDateTime.now();
         this.user = user;
     }
 

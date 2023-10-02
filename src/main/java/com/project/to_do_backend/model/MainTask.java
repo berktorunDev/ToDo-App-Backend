@@ -12,6 +12,9 @@ public class MainTask extends BaseTask {
     @OneToMany(mappedBy = "mainTask", cascade = CascadeType.ALL)
     private Set<SubTask> subTasks;
 
+    public MainTask() {
+    }
+
     public MainTask(UUID id, String description, Priority priority, Status status, User user) {
         super(id, description, priority, status, user);
     }

@@ -14,6 +14,9 @@ public class BaseTaskDTO {
     private LocalDateTime creationDate;
     private UUID userId;
 
+    public BaseTaskDTO() {
+    }
+
     public BaseTaskDTO(UUID id, String description, PriorityType priority, StatusType status,
             LocalDateTime creationDate, UUID userId) {
         this.id = id;
