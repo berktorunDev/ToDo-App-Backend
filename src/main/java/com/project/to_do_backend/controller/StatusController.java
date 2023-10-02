@@ -2,6 +2,8 @@ package com.project.to_do_backend.controller;
 
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +17,8 @@ import com.project.to_do_backend.util.responseHandler.ResponseHandler;
 @RestController
 @RequestMapping("/status")
 public class StatusController {
+    private static final Logger logger = LogManager.getLogger(StatusController.class);
+
     private final StatusService statusService;
 
     // Constructor to inject the StatusService
@@ -31,17 +35,14 @@ public class StatusController {
      */
     @GetMapping("/getAll")
     public ResponseEntity<Object> getStatus() {
-        // Call the StatusService to retrieve a list of StatusDTOs
+        logger.info("Fetching all status types...");
         List<StatusDTO> resultList = statusService.getStatus();
-
-        // Check if the resultList is not null
         if (resultList != null) {
-            // Return a success response with HTTP status OK and a success message
+            logger.info("Status types fetched successfully!");
             return ResponseHandler.successResponse(HttpStatus.OK, "Status types fetched successfully!", resultList);
         } else {
-            // Return an error response with HTTP status INTERNAL_SERVER_ERROR and an error
-            // message
-            return ResponseHandler.errorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Status types fetch is failed!");
+            logger.error("Status types fetch failed because resultList is null!");
+            return ResponseHandler.errorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Status types fetch failed!");
         }
     }
 }

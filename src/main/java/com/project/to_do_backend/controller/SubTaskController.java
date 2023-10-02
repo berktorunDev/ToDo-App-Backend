@@ -3,6 +3,8 @@ package com.project.to_do_backend.controller;
 import java.util.List;
 import java.util.UUID;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,6 +25,8 @@ import com.project.to_do_backend.util.responseHandler.ResponseHandler;
 @RequestMapping("/subtask")
 public class SubTaskController {
 
+    private static final Logger logger = LogManager.getLogger(SubTaskController.class);
+
     private final SubTaskService subTaskService;
 
     public SubTaskController(SubTaskService subTaskService) {
@@ -39,10 +43,13 @@ public class SubTaskController {
      */
     @PostMapping("/create")
     public ResponseEntity<Object> createSubTask(@RequestBody SubTask subTask) {
+        logger.info("Creating a new subtask...");
         SubTaskDTO createdSubTask = subTaskService.createSubTask(subTask);
         if (createdSubTask != null) {
+            logger.info("Subtask created successfully!");
             return ResponseHandler.successResponse(HttpStatus.CREATED, "Subtask created successfully!", createdSubTask);
         } else {
+            logger.error("Subtask creation failed!");
             return ResponseHandler.errorResponse(HttpStatus.BAD_REQUEST, "Subtask creation failed!");
         }
     }
@@ -56,10 +63,13 @@ public class SubTaskController {
      */
     @GetMapping("/get/{id}")
     public ResponseEntity<Object> getSubTaskById(@PathVariable UUID id) {
+        logger.info("Fetching subtask by ID: {}", id);
         SubTaskDTO subTask = subTaskService.getSubTaskById(id);
         if (subTask != null) {
+            logger.info("Subtask fetched successfully!");
             return ResponseHandler.successResponse(HttpStatus.OK, "Subtask fetched successfully!", subTask);
         } else {
+            logger.error("Subtask not found!");
             return ResponseHandler.errorResponse(HttpStatus.NOT_FOUND, "Subtask not found!");
         }
     }
@@ -72,8 +82,10 @@ public class SubTaskController {
      */
     @GetMapping("/getAll")
     public ResponseEntity<Object> getAllSubTasks() {
+        logger.info("Fetching all subtasks...");
         List<SubTaskDTO> subTasks = subTaskService.getAllSubTasks();
-        String infoMessage = subTasks.isEmpty() ? "Don't have a any subtasks" : "Subtasks fetched successfully!";
+        String infoMessage = subTasks.isEmpty() ? "Don't have any subtasks" : "Subtasks fetched successfully!";
+        logger.info(infoMessage);
         return ResponseHandler.successResponse(HttpStatus.OK, infoMessage, subTasks);
     }
 
@@ -88,11 +100,14 @@ public class SubTaskController {
      */
     @PutMapping("/update/{id}")
     public ResponseEntity<Object> updateSubTask(@PathVariable UUID id, @RequestBody SubTask updatedSubTask) {
+        logger.info("Updating subtask with ID: {}", id);
         SubTaskDTO updatedSubTaskDTO = subTaskService.updateSubTask(id, updatedSubTask);
         if (updatedSubTaskDTO != null) {
+            logger.info("Subtask updated successfully!");
             return ResponseHandler.successResponse(HttpStatus.OK, "Subtask updated successfully!", updatedSubTaskDTO);
         } else {
-            return ResponseHandler.errorResponse(HttpStatus.NOT_FOUND, "Subtask not found!");
+            logger.error("Subtask not found or update failed!");
+            return ResponseHandler.errorResponse(HttpStatus.NOT_FOUND, "Subtask not found or update failed!");
         }
     }
 
@@ -105,12 +120,16 @@ public class SubTaskController {
      */
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Object> deleteSubTask(@PathVariable UUID id) {
+        logger.info("Deleting subtask with ID: {}", id);
         SubTaskDTO subTask = subTaskService.getSubTaskById(id);
         if (subTask != null) {
             subTaskService.deleteSubTask(id);
+            logger.info("Subtask deleted successfully!");
             return ResponseHandler.successResponseWithoutData(HttpStatus.OK, "Subtask deleted successfully!");
         }
-        return ResponseHandler.successResponseWithoutData(HttpStatus.NOT_FOUND, "Don't have a any subtasks!");
+        logger.error("Don't have any subtasks with ID: {}", id);
+        return ResponseHandler.successResponseWithoutData(HttpStatus.NOT_FOUND,
+                "Don't have any subtasks with ID: " + id);
     }
 
     /**
@@ -121,13 +140,14 @@ public class SubTaskController {
      */
     @DeleteMapping("/deleteAll")
     public ResponseEntity<Object> deleteAllSubTasks() {
+        logger.info("Deleting all subtasks...");
         Boolean anySubTask = subTaskService.anySubTask();
         if (anySubTask == Boolean.TRUE) {
             subTaskService.deleteAllSubTasks();
-            return ResponseHandler.successResponseWithoutData(HttpStatus.OK,
-                    "All subtasks deleted successfully!");
+            logger.info("All subtasks deleted successfully!");
+            return ResponseHandler.successResponseWithoutData(HttpStatus.OK, "All subtasks deleted successfully!");
         }
-        return ResponseHandler.successResponseWithoutData(HttpStatus.NO_CONTENT,
-                "Don't have a any subtasks!");
+        logger.info("Don't have any subtasks to delete.");
+        return ResponseHandler.successResponseWithoutData(HttpStatus.NO_CONTENT, "Don't have any subtasks to delete.");
     }
 }
