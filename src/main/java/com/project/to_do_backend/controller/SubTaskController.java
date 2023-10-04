@@ -20,6 +20,7 @@ import com.project.to_do_backend.dto.SubTaskDTO;
 import com.project.to_do_backend.model.SubTask;
 import com.project.to_do_backend.service.SubTaskService;
 import com.project.to_do_backend.util.responseHandler.ResponseHandler;
+import com.project.to_do_backend.util.service.rabbitmq.RabbitMQProducerService;
 
 @RestController
 @RequestMapping("/subtask")
@@ -28,9 +29,11 @@ public class SubTaskController {
     private static final Logger logger = LogManager.getLogger(SubTaskController.class);
 
     private final SubTaskService subTaskService;
+    private final RabbitMQProducerService rabbitMQProducerService;
 
-    public SubTaskController(SubTaskService subTaskService) {
+    public SubTaskController(SubTaskService subTaskService, RabbitMQProducerService rabbitMQProducerService) {
         this.subTaskService = subTaskService;
+        this.rabbitMQProducerService = rabbitMQProducerService;
     }
 
     /**
@@ -47,6 +50,7 @@ public class SubTaskController {
         SubTaskDTO createdSubTask = subTaskService.createSubTask(subTask);
         if (createdSubTask != null) {
             logger.info("Subtask created successfully!");
+            rabbitMQProducerService.sendMessage("✅ New subtask created");
             return ResponseHandler.successResponse(HttpStatus.CREATED, "Subtask created successfully!", createdSubTask);
         } else {
             logger.error("Subtask creation failed!");
@@ -104,6 +108,7 @@ public class SubTaskController {
         SubTaskDTO updatedSubTaskDTO = subTaskService.updateSubTask(id, updatedSubTask);
         if (updatedSubTaskDTO != null) {
             logger.info("Subtask updated successfully!");
+            rabbitMQProducerService.sendMessage("✏️ Subtask updated");
             return ResponseHandler.successResponse(HttpStatus.OK, "Subtask updated successfully!", updatedSubTaskDTO);
         } else {
             logger.error("Subtask not found or update failed!");
@@ -125,6 +130,7 @@ public class SubTaskController {
         if (subTask != null) {
             subTaskService.deleteSubTask(id);
             logger.info("Subtask deleted successfully!");
+            rabbitMQProducerService.sendMessage("❌ Subtask deleted");
             return ResponseHandler.successResponseWithoutData(HttpStatus.OK, "Subtask deleted successfully!");
         }
         logger.error("Don't have any subtasks with ID: {}", id);
@@ -145,6 +151,7 @@ public class SubTaskController {
         if (anySubTask == Boolean.TRUE) {
             subTaskService.deleteAllSubTasks();
             logger.info("All subtasks deleted successfully!");
+            rabbitMQProducerService.sendMessage("❌ All Subtask deleted");
             return ResponseHandler.successResponseWithoutData(HttpStatus.OK, "All subtasks deleted successfully!");
         }
         logger.info("Don't have any subtasks to delete.");

@@ -20,6 +20,7 @@ import com.project.to_do_backend.dto.UserDTO;
 import com.project.to_do_backend.model.User;
 import com.project.to_do_backend.service.UserService;
 import com.project.to_do_backend.util.responseHandler.ResponseHandler;
+import com.project.to_do_backend.util.service.rabbitmq.RabbitMQProducerService;
 
 @RestController
 @RequestMapping("/user")
@@ -27,9 +28,11 @@ public class UserController {
     private static final Logger logger = LogManager.getLogger(UserController.class);
 
     private final UserService userService;
+    private final RabbitMQProducerService rabbitMQProducerService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, RabbitMQProducerService rabbitMQProducerService) {
         this.userService = userService;
+        this.rabbitMQProducerService = rabbitMQProducerService;
     }
 
     /**
@@ -45,6 +48,8 @@ public class UserController {
         UserDTO createdUser = userService.createUser(user);
         if (createdUser != null) {
             logger.info("User created successfully!");
+            rabbitMQProducerService.sendMessage("New user created: " + createdUser.getUsername());
+            rabbitMQProducerService.sendMessage("✅ New user '" + createdUser.getUsername() + "' has been created. ✅");
             return ResponseHandler.successResponse(HttpStatus.CREATED, "User created successfully!", createdUser);
         } else {
             logger.error("User creation failed because createdUser is null!");
@@ -106,6 +111,7 @@ public class UserController {
         if (user != null) {
             userService.deleteUser(id);
             logger.info("User deleted successfully!");
+            rabbitMQProducerService.sendMessage("❌ User '" + user.getUsername() + "' has been deleted. ❌");
             return ResponseHandler.successResponseWithoutData(HttpStatus.OK, "User deleted successfully!");
         }
         logger.info("User not found because user is null!");
@@ -127,6 +133,8 @@ public class UserController {
         UserDTO updatedUserDTO = userService.updateUser(id, updatedUser);
         if (updatedUserDTO != null) {
             logger.info("User updated successfully!");
+            rabbitMQProducerService
+                    .sendMessage("👍 User '" + updatedUserDTO.getUsername() + "' information has been updated. 👍");
             return ResponseHandler.successResponse(HttpStatus.OK, "User updated successfully!", updatedUserDTO);
         } else {
             logger.info("User not found or update failed because updatedUserDTO is null!");

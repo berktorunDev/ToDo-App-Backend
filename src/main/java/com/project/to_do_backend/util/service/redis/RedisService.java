@@ -1,4 +1,4 @@
-package com.project.to_do_backend.service;
+package com.project.to_do_backend.util.service.redis;
 
 import java.util.Set;
 

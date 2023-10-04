@@ -12,6 +12,7 @@ import com.project.to_do_backend.model.Status;
 import com.project.to_do_backend.model.StatusType;
 import com.project.to_do_backend.repository.StatusRepository;
 import com.project.to_do_backend.util.mapper.MapperUtil;
+import com.project.to_do_backend.util.service.redis.RedisService;
 
 @Service
 public class StatusService {

@@ -20,6 +20,7 @@ import com.project.to_do_backend.dto.MainTaskDTO;
 import com.project.to_do_backend.model.MainTask;
 import com.project.to_do_backend.service.MainTaskService;
 import com.project.to_do_backend.util.responseHandler.ResponseHandler;
+import com.project.to_do_backend.util.service.rabbitmq.RabbitMQProducerService;
 
 @RestController
 @RequestMapping("/maintask")
@@ -28,9 +29,11 @@ public class MainTaskController {
     private static final Logger logger = LogManager.getLogger(MainTaskController.class);
 
     private final MainTaskService mainTaskService;
+    private final RabbitMQProducerService rabbitMQProducerService;
 
-    public MainTaskController(MainTaskService mainTaskService) {
+    public MainTaskController(MainTaskService mainTaskService, RabbitMQProducerService rabbitMQProducerService) {
         this.mainTaskService = mainTaskService;
+        this.rabbitMQProducerService = rabbitMQProducerService;
     }
 
     /**
@@ -48,6 +51,7 @@ public class MainTaskController {
 
         if (createdMainTask != null) {
             logger.info("Main task created successfully!");
+            rabbitMQProducerService.sendMessage("✅ New main task created");
             return ResponseHandler.successResponse(HttpStatus.CREATED, "Main task created successfully!",
                     createdMainTask);
         } else {
@@ -114,6 +118,7 @@ public class MainTaskController {
 
         if (updatedMainTask != null) {
             logger.info("Main task updated successfully!");
+            rabbitMQProducerService.sendMessage("✏️ Main task updated");
             return ResponseHandler.successResponse(HttpStatus.OK, "Main task updated successfully!", updatedMainTask);
         } else {
             logger.error("Main task not found or update failed because updatedMainTask is null!");
@@ -136,6 +141,7 @@ public class MainTaskController {
         if (mainTask != null) {
             mainTaskService.deleteMainTask(id);
             logger.info("Main task deleted successfully!");
+            rabbitMQProducerService.sendMessage("❌ Main task deleted: ");
             return ResponseHandler.successResponseWithoutData(HttpStatus.OK, "Main task deleted successfully!");
         }
         logger.error("Main task not found because mainTask is null!");
@@ -156,6 +162,7 @@ public class MainTaskController {
         if (anyMainTask == Boolean.TRUE) {
             mainTaskService.deleteAllMainTasks();
             logger.info("All maintasks deleted successfully!");
+            rabbitMQProducerService.sendMessage("❌ All main task deleted: ");
             return ResponseHandler.successResponseWithoutData(HttpStatus.OK, "All maintasks deleted successfully!");
         }
         logger.error("Don't have any maintasks!");

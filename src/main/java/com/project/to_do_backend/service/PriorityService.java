@@ -12,6 +12,7 @@ import com.project.to_do_backend.model.Priority;
 import com.project.to_do_backend.model.PriorityType;
 import com.project.to_do_backend.repository.PriorityRepository;
 import com.project.to_do_backend.util.mapper.MapperUtil;
+import com.project.to_do_backend.util.service.redis.RedisService;
 
 @Service
 public class PriorityService {
