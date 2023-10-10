@@ -20,6 +20,7 @@ import com.project.to_do_backend.dto.UserDTO;
 import com.project.to_do_backend.model.User;
 import com.project.to_do_backend.service.UserService;
 import com.project.to_do_backend.util.responseHandler.ResponseHandler;
+import com.project.to_do_backend.util.service.email.EmailService;
 import com.project.to_do_backend.util.service.rabbitmq.RabbitMQProducerService;
 
 @RestController
@@ -29,10 +30,13 @@ public class UserController {
 
     private final UserService userService;
     private final RabbitMQProducerService rabbitMQProducerService;
+    private final EmailService emailService;
 
-    public UserController(UserService userService, RabbitMQProducerService rabbitMQProducerService) {
+    public UserController(UserService userService, RabbitMQProducerService rabbitMQProducerService,
+            EmailService emailService) {
         this.userService = userService;
         this.rabbitMQProducerService = rabbitMQProducerService;
+        this.emailService = emailService;
     }
 
     /**
@@ -48,8 +52,9 @@ public class UserController {
         UserDTO createdUser = userService.createUser(user);
         if (createdUser != null) {
             logger.info("User created successfully!");
-            rabbitMQProducerService.sendMessage("New user created: " + createdUser.getUsername());
             rabbitMQProducerService.sendMessage("✅ New user '" + createdUser.getUsername() + "' has been created. ✅");
+            emailService.sendHtmlEmail(createdUser.getEmail(), "WELCOME!!!", "Welcome.html");
+            logger.info("Welcome template sended with email!!!");
             return ResponseHandler.successResponse(HttpStatus.CREATED, "User created successfully!", createdUser);
         } else {
             logger.error("User creation failed because createdUser is null!");
@@ -112,6 +117,8 @@ public class UserController {
             userService.deleteUser(id);
             logger.info("User deleted successfully!");
             rabbitMQProducerService.sendMessage("❌ User '" + user.getUsername() + "' has been deleted. ❌");
+            emailService.sendHtmlEmail(user.getEmail(), "DELETE!!!", "AccountDelete.html");
+            logger.info("AccountDelete template sended with email!!!");
             return ResponseHandler.successResponseWithoutData(HttpStatus.OK, "User deleted successfully!");
         }
         logger.info("User not found because user is null!");
@@ -136,6 +143,30 @@ public class UserController {
             rabbitMQProducerService
                     .sendMessage("👍 User '" + updatedUserDTO.getUsername() + "' information has been updated. 👍");
             return ResponseHandler.successResponse(HttpStatus.OK, "User updated successfully!", updatedUserDTO);
+        } else {
+            logger.info("User not found or update failed because updatedUserDTO is null!");
+            return ResponseHandler.errorResponse(HttpStatus.NOT_FOUND, "User not found or update failed!");
+        }
+    }
+
+    /**
+     * Verify an existing user's information.
+     *
+     * @param id          The ID of the user to update.
+     * @return ResponseEntity with the verified user as UserDTO and a success message
+     *         if the update is successful, or an error message and status code if
+     *         the user is not found or the verify fails.
+     */
+    @PutMapping("/verify/{id}")
+    public ResponseEntity<Object> verifyUser(@PathVariable UUID id) {
+        logger.info("Verification starting...");
+        UserDTO verifiedUserDTO = userService.verifyUser(id);
+        if (verifiedUserDTO != null) {
+            logger.info("User verified successfully!");
+            rabbitMQProducerService.sendMessage("👍 User '" + verifiedUserDTO.getUsername() + "' has been verified. 👍");
+            emailService.sendHtmlEmail(verifiedUserDTO.getEmail(), "VERIFY!!!", "Verify.html");
+            logger.info("Verify template sended with email!!!");
+            return ResponseHandler.successResponse(HttpStatus.OK, "User verified successfully!", verifiedUserDTO);
         } else {
             logger.info("User not found or update failed because updatedUserDTO is null!");
             return ResponseHandler.errorResponse(HttpStatus.NOT_FOUND, "User not found or update failed!");

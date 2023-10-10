@@ -27,6 +27,8 @@ The project utilizes the following technologies and their respective purposes:
 - **PostgreSQL:** Serves as a relational database to store data related to certain entities. It is containerized using Docker.
 - **Redis:** Used for caching enum entities. Redis is also containerized via Docker and configured in `../config/RedisConfig`. For usage scenarios, refer to `../util/service/redis`.
 - **RabbitMQ:** Utilized for sending notifications to users through a message queue. RabbitMQ is containerized using Docker and configured in `../config/RabbitMQConfig`. Since there is no integrated frontend in the project, notifications are logged in a specific format to the console. Usage scenarios can be found in `../util/service/rabbitmq`.
+- **Spring Mail:** Utilized for sending email to users through a smtp server. User is notified via email with the HTML templates specified for verify, create and delete operations. Usage can be found in `../util/service/email`
+- **Spring Thymeleaf:** The dependency required for the HTML templates to be sent to the user to be used as variables in the email service. Usage can be found in `../resources/templates/**`
 
 ### Getting Started
 

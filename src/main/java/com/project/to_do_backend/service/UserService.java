@@ -118,4 +118,33 @@ public class UserService {
         // Convert the saved user to UserDTO and return it
         return mapperUtil.convertToDTO(savedUser, UserDTO.class);
     }
+
+    /**
+     * Verifies an existing user's information.
+     *
+     * @param id The ID of the user to update.
+     * @return The verified user as a UserDTO if found, or null if not found.
+     */
+    public UserDTO verifyUser(UUID id) {
+        // First, check if the user with the given ID exists in the database
+        Optional<User> existingUserOptional = userRepository.findById(id);
+
+        if (existingUserOptional.isEmpty()) {
+            // If the user does not exist, return null or throw an exception to indicate
+            // that the user was not found
+            return null; // You can also throw a custom exception here
+        }
+
+        // Get the existing user from the optional
+        User existingUser = existingUserOptional.get();
+
+        // Update the fields of the existing user
+        existingUser.setIsVerified(Boolean.TRUE);
+
+        // Save the updated user to the database
+        User savedUser = userRepository.save(existingUser);
+
+        // Convert the saved user to UserDTO and return it
+        return mapperUtil.convertToDTO(savedUser, UserDTO.class);
+    }
 }

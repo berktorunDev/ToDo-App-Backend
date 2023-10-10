@@ -25,10 +25,15 @@ public class User {
     private UUID id;
 
     private String username;
+
     @Email
     private String email;
+
     private String password;
+
     private LocalDateTime creationDate;
+
+    private Boolean isVerified;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<MainTask> tasks;
@@ -47,13 +52,13 @@ public class User {
 
     public User() {
         this.creationDate = LocalDateTime.now();
+        this.isVerified = Boolean.FALSE;
     }
 
     public User(UUID id, String username, String email) {
         this.id = id;
         this.username = username;
         this.email = email;
-        this.creationDate = LocalDateTime.now();
     }
 
     public UUID getId() {
@@ -102,6 +107,14 @@ public class User {
 
     public void setTasks(Set<MainTask> tasks) {
         this.tasks = tasks;
+    }
+
+    public Boolean getIsVerified() {
+        return isVerified;
+    }
+
+    public void setIsVerified(Boolean isVerified) {
+        this.isVerified = isVerified;
     }
 
 }
