@@ -10,13 +10,13 @@ public class UserDTO {
     private String email;
     private LocalDateTime creationDate;
     private Set<MainTaskDTO> tasks;
-    private Boolean isVerified;
+    private boolean isVerified;
 
     public UserDTO() {
     }
 
     public UserDTO(UUID id, String username, String email, LocalDateTime creationDate,
-            Set<MainTaskDTO> tasks, Boolean isVerified) {
+            Set<MainTaskDTO> tasks, boolean isVerified) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -65,11 +65,11 @@ public class UserDTO {
         this.tasks = tasks;
     }
 
-    public Boolean getIsVerified() {
+    public boolean getIsVerified() {
         return isVerified;
     }
 
-    public void setIsVerified(Boolean isVerified) {
+    public void setIsVerified(boolean isVerified) {
         this.isVerified = isVerified;
     }
 

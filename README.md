@@ -55,7 +55,6 @@ Follow these steps to run the project:
 ## Application Startup
 
 3. **Application Startup:**
-   - Uncomment the lines in the `../script/StartupScript` class that are meant to run during the initial startup of the application. These lines are used for setting up the application for the first time. Don't forget to comment them back out once the application is running successfully.
    - Run the project. You can start the project from your IDE or use the following command in the terminal:
      ```bash
      mvn spring-boot:run

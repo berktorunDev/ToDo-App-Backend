@@ -33,7 +33,7 @@ public class User {
 
     private LocalDateTime creationDate;
 
-    private Boolean isVerified;
+    private boolean isVerified;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<MainTask> tasks;
@@ -109,11 +109,11 @@ public class User {
         this.tasks = tasks;
     }
 
-    public Boolean getIsVerified() {
+    public boolean getIsVerified() {
         return isVerified;
     }
 
-    public void setIsVerified(Boolean isVerified) {
+    public void setIsVerified(boolean isVerified) {
         this.isVerified = isVerified;
     }
 
